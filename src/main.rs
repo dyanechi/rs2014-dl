@@ -3,7 +3,7 @@ use std::{thread::{self, Thread}, time::Duration};
 
 use clap::{Parser, Args, Subcommand};
 use easydev::builder::*;
-use rs2014::{Ignition, IgnitionFilters, models::{track::RsTrack, RsTrackResponse}, Download};
+use rs2014_dl::{Ignition, IgnitionFilters, models::{track::RsTrack, RsTrackResponse}, Download, DownloadState};
 
 
 #[derive(Subcommand, Default, Debug, Clone, Copy, PartialEq)]
@@ -183,11 +183,11 @@ pub fn download(mut fetcher: &mut Ignition) {
         match fetcher.download(download_link, file_name) {
             Ok(status) => {
                 match status {
-                    rs2014::DownloadState::Downloaded => {
+                    DownloadState::Downloaded => {
                         print!("DOWNLOADED\n");
                         download_stats.c_downloads+=1;
                     },
-                    rs2014::DownloadState::Skipped => {
+                    DownloadState::Skipped => {
                         print!("ALREADY_EXISTS\n");
                         download_stats.c_skipped+=1;
                     }

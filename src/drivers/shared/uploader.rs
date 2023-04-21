@@ -1,7 +1,7 @@
 
 
 use super::*;
-pub trait UploadDriver {}
+
 
 pub enum UpRemoteHost {
     GDrive,

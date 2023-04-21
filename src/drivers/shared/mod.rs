@@ -1,10 +1,17 @@
 use crate::*;
 use super::*;
+
 mod downloader;
-pub(crate) use downloader::*;
 mod uploader;
-pub(crate) use uploader::*;
 mod fetcher;
-pub(crate) use fetcher::*;
-mod traits;
-pub(crate) use traits::*;
+pub mod traits;
+
+pub use downloader::*;
+pub use uploader::*;
+pub use fetcher::*;
+// pub use traits::*;
+
+
+fn driver_not_implemented<T>() -> ApiResult<T> {
+    Err(Error::DriverError("Driver not implemented".to_string()))
+}

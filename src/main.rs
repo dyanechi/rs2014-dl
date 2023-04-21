@@ -3,7 +3,7 @@ use std::{thread::{self, Thread}, time::Duration};
 
 use clap::{Parser, Args, Subcommand};
 use easydev::builder::*;
-use rs2014_dl::{IgnitionDriver, IgnitionFilters, models::{track::RsTrack, RsTrackResponse}, Download, DownloadState, drivers::Driver};
+use rs2014_dl::{models::{track::RsTrack, RsTrackResponse}, drivers::*, IgnitionDriver};
 
 
 #[derive(Subcommand, Default, Debug, Clone, Copy, PartialEq)]
@@ -25,9 +25,17 @@ struct CliArgs {
     // fetch_options: FetchOptions,
 }
 
+pub fn take_ignition(arg: &mut IgnitionDriver) {
+    
+}
+
 fn main() {
     let args = CliArgs::parse();
-    let mut fetcher = IgnitionDriver::from_env().with_filters(args.filters.unwrap_or_default());
+    let driver = IgnitionDriver::create();
+    // let mut fetcher = IgnitionDriver::create().with_filters(args.filters.unwrap_or_default());
+
+    // let mut driver = Driver::Ignition.new().unwrap();
+    // let mut fetcher = driver.driver_mut().unwrap();
     // let driver = Driver::Ignition(fetcher).new();
 
 

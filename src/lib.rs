@@ -14,6 +14,7 @@ pub mod apis;
 pub use apis::*;
 
 pub mod drivers;
+pub use drivers::*;
 
 pub mod models;
 

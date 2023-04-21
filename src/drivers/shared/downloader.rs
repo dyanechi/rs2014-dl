@@ -1,9 +1,6 @@
 use super::*;
 
-pub trait DownloadDriver: Any + Download {}
-pub trait Download {
-    fn download(&self) -> ApiResult<()>;
-}
+
 
 pub enum DlRemoteHost {
     GDrive,

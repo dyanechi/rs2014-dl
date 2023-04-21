@@ -1,6 +1,28 @@
-use super::{*, Download};
+use super::*;
 
 use clap::Args;
+
+mod download;
+mod fetch;
+mod upload;
+
+pub use download::*;
+pub use fetch::*;
+pub use upload::*;
+
+impl AsAny for IgnitionDriver {
+    fn as_any(&self) -> &dyn Any { self }
+    fn as_any_mut(&mut self) -> &mut dyn Any { self }
+}
+
+impl ProcessDriver for IgnitionDriver {
+    type DriverType = Self;
+    fn create() -> DriverInstance<Self> {
+        DriverInstance::new(IgnitionDriver::new(IgnitionAuth::from_env()))
+    }
+}
+
+
 
 #[derive(Debug, Default, Clone)]
 pub struct IgnitionDriver {
@@ -9,7 +31,7 @@ pub struct IgnitionDriver {
     pub(crate) filters: IgnitionFilters,
 }
 impl IgnitionDriver {
-    pub fn new(auth: IgnitionAuth) -> IgnitionDriver {
+    fn new(auth: IgnitionAuth) -> IgnitionDriver {
         let mut headers = HeaderMap::new();
         headers.insert("Accept", "application/json, text/javascript, */*; q=0.01".parse().unwrap());
         headers.insert("Accept-Encoding", "gzip, deflate, br".parse().unwrap());
@@ -36,10 +58,8 @@ impl IgnitionDriver {
         let filters = IgnitionFilters::default();
         IgnitionDriver { auth, client, filters }
     }
-    pub fn from_env() -> IgnitionDriver {
-        IgnitionDriver::new(IgnitionAuth::from_env())
-    }
 
+    
     pub fn filters(&self) -> IgnitionFilters {
         self.filters.clone()
     }
@@ -212,19 +232,7 @@ impl IgnitionFilters {
     pub fn set_search(mut self, search: impl Into<String>) -> Self { self.search = Some(search.into()); self }
 }
 
-impl Download for IgnitionDriver {
-    fn download(&self) -> ApiResult<()> {
-        
-        Err(Error::DriverError(format!("Failed")))
-    }
-}
 
-impl AsAny for IgnitionDriver {
-    fn as_any(&self) -> &dyn Any {
-        self
-    }
-}
-impl DownloadDriver for IgnitionDriver {}
-impl UploadDriver for IgnitionDriver {}
-impl FetchDriver for IgnitionDriver {}
-impl ProcessDriver for IgnitionDriver {}
+
+
+

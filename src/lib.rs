@@ -1,4 +1,5 @@
 #![allow(non_snake_case)]
+#![feature(type_alias_impl_trait)]
 
 use core::fmt;
 use std::{collections::HashMap, fmt::{Display, Formatter}};
@@ -43,6 +44,8 @@ pub enum Error {
     IoError(String),
     /// An Error  related to file saving
     FileError(String),
+    /// An Error  related to file saving
+    DriverError(String),
 }
 
 impl Display for Error {
@@ -53,6 +56,7 @@ impl Display for Error {
             Error::DownloadError(msg) => write!(f, "Download error: {}", msg),
             Error::IoError(msg) => write!(f, "Io error: {}", msg),
             Error::FileError(msg) => write!(f, "File error: {}", msg),
+            Error::DriverError(msg) => write!(f, "Driver error: {}", msg),
         }
     }
 }

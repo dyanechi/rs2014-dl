@@ -13,14 +13,14 @@ pub enum DownloadState {
 }
 
 type DownloadUrl = String;
-pub trait Download {
+trait Download {
     fn download(&self, url: impl Into<String>, file_name: impl Into<String>) -> ApiResult<DownloadState>;
     fn parse_download_url(&self, url: impl Into<String>) -> ApiResult<DownloadUrl>;
     fn verify_download_url(&self, url: impl Into<String>) -> ApiResult<()>;
 }
 
 
-impl Download for Ignition {
+impl Download for IgnitionDriver {
     fn verify_download_url(&self, url: impl Into<String>) -> ApiResult<()> {
         
         Ok(())

@@ -3,7 +3,7 @@ use std::{thread::{self, Thread}, time::Duration};
 
 use clap::{Parser, Args, Subcommand};
 use easydev::builder::*;
-use rs2014_dl::{Ignition, IgnitionFilters, models::{track::RsTrack, RsTrackResponse}, Download, DownloadState};
+use rs2014_dl::{IgnitionDriver, IgnitionFilters, models::{track::RsTrack, RsTrackResponse}, Download, DownloadState, drivers::Driver};
 
 
 #[derive(Subcommand, Default, Debug, Clone, Copy, PartialEq)]
@@ -27,7 +27,9 @@ struct CliArgs {
 
 fn main() {
     let args = CliArgs::parse();
-    let mut fetcher = Ignition::from_env().with_filters(args.filters.unwrap_or_default());
+    let mut fetcher = IgnitionDriver::from_env().with_filters(args.filters.unwrap_or_default());
+    // let driver = Driver::Ignition(fetcher).new();
+
 
     match args.action.unwrap_or_default() {
         CliAction::Fetch => { fetch(&mut fetcher); },
@@ -80,7 +82,7 @@ impl DownloadStats {
     }
 }
 
-pub fn fetch(mut fetcher: &mut Ignition) -> RsTrackResponse {
+pub fn fetch(mut fetcher: &mut IgnitionDriver) -> RsTrackResponse {
     let IgnitionFilters { start, length, .. } = fetcher.filters();
     let mut response = match fetcher.fetch_tracks(None) {
         Ok(resp) => resp,
@@ -128,7 +130,7 @@ pub fn fetch(mut fetcher: &mut Ignition) -> RsTrackResponse {
 
 }
 
-pub fn download(mut fetcher: &mut Ignition) {
+pub fn download(mut fetcher: &mut IgnitionDriver) {
     let RsTrackResponse { mut data, .. } = fetch(fetcher);
 
     let mut filtered_tracks: Vec<RsTrack> = vec![];
@@ -251,7 +253,7 @@ pub fn download(mut fetcher: &mut Ignition) {
 //     );
 // }
 
-pub fn download_all(fetcher: Ignition) {
+pub fn download_all(fetcher: IgnitionDriver) {
     // let download_opts = FetchOptions::new()
     //     .with_repeat(2000)
     //     .with_length(500)

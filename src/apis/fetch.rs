@@ -7,7 +7,7 @@ pub trait Fetch<T> {
     fn fetch(&self) -> ApiResult<T>;
 }
 
-impl<T: DeserializeOwned> Fetch<T> for Ignition {
+impl<T: DeserializeOwned> Fetch<T> for IgnitionDriver {
     fn fetch(&self) -> ApiResult<T> {
         let url = format!("{}/?{}", URL, self.filters.parse());
         let request = self.client.get(url).build().unwrap();
@@ -28,7 +28,7 @@ impl<T: DeserializeOwned> Fetch<T> for Ignition {
     }
 }
 
-impl Ignition {
+impl IgnitionDriver {
     pub fn fetch_tracks(&mut self, filters: Option<&IgnitionFilters>) -> ApiResult<RsTrackResponse> {
         if let Some(filters) = filters {
             self.filters = filters.to_owned();

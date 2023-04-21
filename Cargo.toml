@@ -4,8 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[workspace]
+members = ["crates/*"]
 
-[dependencies]
+[workspace.dependencies]
 clap = { version = "4.2.2", features = ["derive"] }
 dotenvy = "0.15.7"
 reqwest = { version = "0.11.16", features = ["blocking", "json", "cookies", "brotli"]}
@@ -14,3 +16,8 @@ serde_json = "1.0.96"
 tokio = "1.27.0"
 
 easydev = { git = "https://github.com/dyanechi/easydev-rs" }
+crossfud = { path = "crates/crossfud" }
+
+[dependencies]
+crossfud = { path = "crates/crossfud" }
+ignition = { path = "crates/ignition" }

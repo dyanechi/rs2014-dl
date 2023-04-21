@@ -7,14 +7,18 @@ pub mod shared;
 use shared::*;
 pub use shared::traits::*;
 
-mod ignition;
-pub use ignition::*;
+mod gdrive;
+mod dropbox;
+use gdrive::*;
+use dropbox::*;
 
 pub struct DriverInstance<T: ProcessDriver + DownloadDriver + UploadDriver + FetchDriver> {
     driver: Option<RequestDriver<T>>,
     remote: RemoteHost,
     url: RemoteUrl,
 }
+
+pub trait Driver<T> {}
 
 
 impl<T: ProcessDriver + DownloadDriver + UploadDriver + FetchDriver> DriverInstance<T> {
@@ -70,29 +74,29 @@ impl<T: ProcessDriver + DownloadDriver + UploadDriver + FetchDriver> DriverInsta
 
 
 
-struct MisteryDriver {}
-impl AsAny for MisteryDriver {
-    fn as_any(&self) -> &dyn Any { self }
-    fn as_any_mut(&mut self) -> &mut dyn Any { self }
-}
+// struct MisteryDriver {}
+// impl AsAny for MisteryDriver {
+//     fn as_any(&self) -> &dyn Any { self }
+//     fn as_any_mut(&mut self) -> &mut dyn Any { self }
+// }
 // impl DownloadDriver for MisteryDriver {}
 // impl UploadDriver for MisteryDriver {}
 // impl FetchDriver for MisteryDriver {}
 // impl ProcessDriver for MisteryDriver {}
 
 
-#[derive(Default, Clone)]
-pub enum Driver {
-    #[default]
-    Ignition,
-    Mistery,
-    Unknown,
-}
-impl Driver {
-    // pub fn new<T: ProcessDriver + DownloadDriver + UploadDriver + FetchDriver>(self) -> ApiResult<DriverInstance<T>> {
-    //     DriverInstance::create(self)
-    // }
-}
+// #[derive(Default, Clone)]
+// pub enum Driver {
+//     #[default]
+//     Ignition,
+//     Mistery,
+//     Unknown,
+// }
+// impl Driver {
+//     // pub fn new<T: ProcessDriver + DownloadDriver + UploadDriver + FetchDriver>(self) -> ApiResult<DriverInstance<T>> {
+//     //     DriverInstance::create(self)
+//     // }
+// }
 
 // impl DriverInstance {
 //     pub fn ignition(self) -> Option<Box<IgnitionDriver>> {
@@ -129,7 +133,7 @@ impl Driver {
 
 
 pub fn test() {
-    let driver = IgnitionDriver::create();
+    // let driver = IgnitionDriver::create();
 
     // let driver = Driver::Ignition.new().unwrap();
     // let driver = driver.driver_ref::<IgnitionDriver>().unwrap();

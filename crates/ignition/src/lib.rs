@@ -1,7 +1,17 @@
-use super::*;
+#![allow(non_snake_case)]
+#![feature(type_alias_impl_trait)]
+#![feature(associated_type_defaults)]
+
+use std::collections::HashMap;
+use std::any::Any;
+use easydev::builder::*;
+use reqwest::header::{HeaderMap, COOKIE};
+
+use crossfud::*;
 
 use clap::Args;
 
+mod models;
 mod download;
 mod fetch;
 mod upload;
@@ -22,6 +32,7 @@ impl ProcessDriver for IgnitionDriver {
     }
 }
 
+const URL: &'static str = "https://ignition4.customsforge.com";
 
 
 #[derive(Debug, Default, Clone)]

@@ -13,6 +13,6 @@ pub enum UpRemoteHost {
 pub struct Uploader<T: UploadDriver> {
     driver: T,
     remote: RemoteHost,
-    url: RemoteUrl,
+    url: RemoteHost,
 }
 

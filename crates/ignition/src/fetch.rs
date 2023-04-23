@@ -6,7 +6,7 @@ use super::*;
 
 impl FetchDriver for IgnitionDriver {
     fn fetch<T: DeserializeOwned>(&self) -> ApiResult<T> {
-        let url = format!("{}/?{}", URL, self.filters.parse());
+        let url = format!("{}/?{}", Self::FT_URL, self.filters.parse());
         let request = self.client.get(url).build().unwrap();
         
         match self.client.execute(request) {

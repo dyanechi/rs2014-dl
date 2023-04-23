@@ -5,19 +5,25 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [workspace]
-members = ["crates/*"]
+members = [
+    "crates/crossfud",
+    "crates/ignition",
+    "crates/ignore/amazon-jobs"
+]
 
 [workspace.dependencies]
 clap = { version = "4.2.2", features = ["derive"] }
 dotenvy = "0.15.7"
-reqwest = { version = "0.11.16", features = ["blocking", "json", "cookies", "brotli"]}
+reqwest = { version = "0.11.16", features = ["blocking", "json", "cookies", "brotli", "deflate", "multipart", "gzip", "stream", "native-tls", "native-tls-alpn"]}
 serde = { version = "1.0.160", features = ["derive"]}
 serde_json = "1.0.96"
 tokio = "1.27.0"
 
 easydev = { git = "https://github.com/dyanechi/easydev-rs" }
 crossfud = { path = "crates/crossfud" }
+chunked_transfer = { git = "https://github.com/frewsxcv/rust-chunked-transfer" }
 
 [dependencies]
 crossfud = { path = "crates/crossfud" }
 ignition = { path = "crates/ignition" }
+reqwest.workspace = true

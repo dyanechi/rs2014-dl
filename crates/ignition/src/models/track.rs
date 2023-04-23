@@ -95,19 +95,19 @@ pub struct RsTrackResponse {
     pub data: Vec<RsTrack>,
 }
 
-impl LoadFromCache for RsTrackResponse {
-    type Output = Self;
-    fn load_from_cache() -> crate::ApiResult<Self::Output> {
+// impl LoadFromCache for RsTrackResponse {
+//     type Output = Self;
+//     fn load_from_cache() -> crate::ApiResult<Self::Output> {
         
-        // if let Err(error) = serde_json::from_reader(rdr) {
-        //     return Err(Error::FileError(format!("Reading file failed: {}", error)));
-        // }
-        Ok(Default::default())
-    }
-}
+//         // if let Err(error) = serde_json::from_reader(rdr) {
+//         //     return Err(Error::FileError(format!("Reading file failed: {}", error)));
+//         // }
+//         Ok(Default::default())
+//     }
+// }
 
-impl SaveToCache for RsTrackResponse {
-    fn save_to_cache() -> crate::ApiResult<()> {
-        Ok(())
-    }
-}
+// impl SaveToCache for RsTrackResponse {
+//     fn save_to_cache() -> crate::ApiResult<()> {
+//         Ok(())
+//     }
+// }

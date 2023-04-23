@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use super::*;
 
 
@@ -23,8 +25,8 @@ use super::*;
 // }
 
 pub enum DlDriverKind {
-    GDrive(DlDriver<GDrive>),
-    DropBox(DlDriver<DropBox>),
+    GDrive(Downloader<GDrive>),
+    DropBox(Downloader<DropBox>),
     // Custom(DlDriver<Custom>),
     Unknown,
 }
@@ -44,7 +46,7 @@ impl DlDriverKind {
     //     }
     // }
 
-    fn parse_url(parsed_url: &Url) -> ApiResult<RemoteUrl> {
+    fn parse_url(parsed_url: &Url) -> ApiResult<RemoteHost> {
         let domain = parsed_url.domain().unwrap();
         match domain {
             "drive.google.com" => {
@@ -53,7 +55,7 @@ impl DlDriverKind {
                         return Err(Error::DownloadError(format!("Link requires Google authorization: {}", parsed_url)))
                     }
                     if k == "id" {
-                        return Ok(RemoteUrl::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", v)));
+                        return Ok(RemoteHost::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", v)));
                     }
                 };
 
@@ -66,7 +68,7 @@ impl DlDriverKind {
                 };
                 
                 match uri.next() {
-                    Some(id) => Ok(RemoteUrl::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", id))),
+                    Some(id) => Ok(RemoteHost::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", id))),
                     None => Err(Error::DownloadError("Can't find id in url".to_string()))
                 }
             },
@@ -74,7 +76,7 @@ impl DlDriverKind {
                 let mut url = parsed_url.clone();
                 url.set_query(Some("dl=1"));
                 url.to_string();
-                Ok(RemoteUrl::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", url.as_str())))
+                Ok(RemoteHost::new(&format!("https://drive.google.com/uc?id={}&export=download&confirm=yes", url.as_str())))
             },
             // "mega.nz" => {
             //     return Err(Error::DownloadError(format!("Domain not supported: '{domain}'")) )
@@ -83,31 +85,56 @@ impl DlDriverKind {
         }
     }
 
-    pub fn from_url(url: &str) -> ApiResult<RemoteHost> {
-        let parsed_url = Url::parse(&url).expect("Failed to parse url");
-        let mut remote_host = RemoteHost::default();
-        match Self::parse_url(&parsed_url) {
-            Ok(url) => Ok(RemoteHost { url }),
-            Err(error) => Err(Error::DownloadError(error.to_string()))
+    // pub fn from_url(url: &str) -> ApiResult<RemoteHost> {
+    //     let parsed_url = Url::parse(&url).expect("Failed to parse url");
+    //     let mut remote_host = RemoteHost::default();
+    //     match Self::parse_url(&parsed_url) {
+    //         Ok(url) => Ok(RemoteHost::new(url)),
+    //         Err(error) => Err(Error::DownloadError(error.to_string()))
+    //     }
+    // }
+}
+
+
+
+
+pub struct Downloader<T: DownloadDriver> {
+    driver: T,
+    remote: RemoteHost,
+    url: RemoteHost,
+}
+impl<T: DownloadDriver> Downloader<T> {
+    pub fn new(driver: T) -> Downloader<T> {
+        Self {
+            driver,
+            remote: RemoteHost::default(),
+            url: RemoteHost::default()
         }
     }
 }
 
-
-
-
-pub struct DlDriver<T: DownloadDriver> {
-    driver: T,
-    remote: RemoteHost,
-    url: RemoteUrl,
-}
-impl<T: DownloadDriver> DlDriver<T> {
-    pub fn new(driver: T) -> DlDriver<T> {
-        Self {
-            driver,
-            remote: RemoteHost::default(),
-            url: RemoteUrl::default()
-        }
+impl<T: DownloadDriver> Downloader<T> {
+    pub fn download(url: &str, file_name: &str) -> ApiResult<()> {
+        let file_path = Path::new(T::DOWNLOAD_DIR).join(file_name);
+            // if file_path.exists() { return Ok(DownloadState::Skipped ); }
+            std::fs::create_dir_all(&file_path.parent().unwrap()).unwrap();
+    
+            // let download_url = self.parse_download_url(url)?;
+    
+            // println!("[INFO] Downloading from '{download_url}'...");]
+            match reqwest::blocking::get(url) {
+                Ok(resp) => {
+                    let body = resp.bytes().unwrap();
+                    if let Err(err) = std::fs::write(file_path, &body) {
+                        return Err(Error::FileError(err.to_string()));
+                    };
+                    Ok(())
+                },
+                Err(error) => Err(Error::RequestError(format!("{}", error.to_string())))
+            }
+    
+            // Ok(DownloadState::Downloaded)
+            // Err(Error::DriverError(format!("Failed")))
     }
 }
 

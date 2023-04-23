@@ -3,30 +3,23 @@
 #![feature(associated_type_defaults)]
 
 use core::fmt;
-use std::fmt::{Display, Formatter};
+use std::{fmt::{Display, Formatter}, any::Any};
 
 use easydev::builder::*;
-use reqwest::header::{HeaderMap, COOKIE};
-
-pub mod fetcher;
-pub use fetcher::*;
+use reqwest::{header::{HeaderMap, COOKIE}, Url};
 
 pub mod drivers;
+pub mod clients;
 pub use drivers::*;
-
-pub trait LoadFromCache {
-    type Output;
-    fn load_from_cache() -> ApiResult<Self::Output>;
-}
-
-pub trait SaveToCache {
-    fn save_to_cache() -> ApiResult<()>;
-}
-
-
+pub use clients::*;
 
 pub type Json = serde_json::Value;
 pub type ApiResult<T> = Result<T, Error>;
+
+pub trait AsAny {
+    fn as_any(&self) -> &dyn Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any;
+}
 
 #[derive(Debug)]
 pub enum Error {

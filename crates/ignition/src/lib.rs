@@ -25,15 +25,15 @@ impl AsAny for IgnitionDriver {
     fn as_any_mut(&mut self) -> &mut dyn Any { self }
 }
 
+impl Driver for IgnitionDriver {
+    const DOMAIN_URL: &'static str = "https://ignition4.customsforge.com";
+}
 impl ProcessDriver for IgnitionDriver {
     type DriverType = Self;
-    fn create() -> DriverInstance<Self> {
-        DriverInstance::new(IgnitionDriver::new(IgnitionAuth::from_env()))
+    fn create() -> ClientInstance<Self> {
+        ClientInstance::new(IgnitionDriver::new(IgnitionAuth::from_env()))
     }
 }
-
-const URL: &'static str = "https://ignition4.customsforge.com";
-
 
 #[derive(Debug, Default, Clone)]
 pub struct IgnitionDriver {

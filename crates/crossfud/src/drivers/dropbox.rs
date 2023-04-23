@@ -2,6 +2,10 @@ use super::*;
 
 #[derive(Clone)]
 pub struct DropBox {}
+
+impl Driver for DropBox {
+    const DOMAIN_URL: &'static str = "https://www.dropbox.com";
+}
 impl DownloadDriver for DropBox {
     type DlResult = ();
     fn download<U, F>(&self, url: U, file_name: F)-> ApiResult<Self::DlResult>
@@ -17,9 +21,9 @@ impl DownloadDriver for DropBox {
 //     }
 // }
 // impl Driver<DlDriver<DropBox>> for DropBox {}
-impl Downloader for DropBox {
-    fn downloader(&self) -> DlDriver<Box<Self>> {
-        DlDriver::new(Box::new(self.clone()))
+impl GetDownloader for DropBox {
+    fn downloader(&self) -> Downloader<Box<Self>> {
+        Downloader::new(Box::new(self.clone()))
     }
     // fn downloader(&self) -> DlDriver<DropBox> {
     //     DlDriver::new(DropBox {})

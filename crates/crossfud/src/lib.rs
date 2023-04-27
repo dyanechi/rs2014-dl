@@ -1,6 +1,7 @@
 #![allow(non_snake_case)]
 #![feature(type_alias_impl_trait)]
 #![feature(associated_type_defaults)]
+#![feature(let_chains)]
 
 use core::fmt;
 use std::{fmt::{Display, Formatter}, any::Any};

@@ -15,6 +15,7 @@ mod models;
 mod download;
 mod fetch;
 mod upload;
+mod cache;
 
 pub use download::*;
 pub use fetch::*;
@@ -26,6 +27,7 @@ impl AsAny for IgnitionDriver {
 }
 
 impl Driver for IgnitionDriver {
+    const DRIVER_NAME: &'static str = "Ignition";
     const DOMAIN_URL: &'static str = "https://ignition4.customsforge.com";
 }
 impl ProcessDriver for IgnitionDriver {
@@ -70,6 +72,9 @@ impl IgnitionDriver {
         IgnitionDriver { auth, client, filters }
     }
 
+    pub fn from_env() -> IgnitionDriver {
+        Self::new(IgnitionAuth::from_env())
+    }
     
     pub fn filters(&self) -> IgnitionFilters {
         self.filters.clone()

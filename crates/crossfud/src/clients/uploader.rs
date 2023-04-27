@@ -2,7 +2,6 @@
 
 use super::*;
 
-
 pub enum UpRemoteHost {
     GDrive,
     DropBox,
@@ -10,9 +9,15 @@ pub enum UpRemoteHost {
     Unknown,
 }
 
-pub struct Uploader<T: UploadDriver> {
-    driver: T,
+pub struct Uploader {
+    // driver: ,
     remote: RemoteHost,
     url: RemoteHost,
 }
 
+impl Client for Uploader {
+    const CLIENT_NAME: &'static str = "Crossfud Uploader";
+}
+impl UploadClient for Uploader {
+    
+}
